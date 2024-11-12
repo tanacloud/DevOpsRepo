@@ -448,7 +448,6 @@ Resources:
             systemctl enable amazon-ssm-agent
             systemctl start amazon-ssm-agent
 
-  Resources:
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
