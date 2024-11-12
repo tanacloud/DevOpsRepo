@@ -214,6 +214,22 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable2
       SubnetId: !Ref PrivateSubnet2
 
+  WebappSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: allow access to Webapp from ALB
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 8080
+        ToPort: 8080
+        SourceSecurityGroupId:
+          Ref: ALBSecurityGroup
+      SecurityGroupEgress:
+      - IpProtocol: '-1'
+        CidrIp: 0.0.0.0/0
+
+
   # IAM Roles
   WebappRole:
     Type: AWS::IAM::Role
@@ -323,21 +339,6 @@ Resources:
       SecurityGroupEgress:
       - IpProtocol: '-1'
         CidrIp: 0.0.0.0/0  
-
-  WebappSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: allow access to Webapp from ALB
-      VpcId: !Ref VPC
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 8080
-        ToPort: 8080
-        SourceSecurityGroupId:
-          Ref: ALBSecurityGroup
-      SecurityGroupEgress:
-      - IpProtocol: '-1'
-        CidrIp: 0.0.0.0/0
 
   WebappDeploymentBucket:
     Type: AWS::S3::Bucket
@@ -469,7 +470,7 @@ Resources:
           Value: "Webapp-ASG"
           PropagateAtLaunch: true              
 
-  ALBListener:
+    ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
@@ -500,7 +501,6 @@ Resources:
       Port: 8080
       Protocol: HTTP
       VpcId: !Ref VPC
-
 
 Outputs:
   VPCID:
