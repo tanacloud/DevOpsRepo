@@ -383,7 +383,6 @@ Resources:
                 Resource:
                   - !Sub 'arn:${AWS::Partition}:codedeploy:*:${AWS::AccountId}:*'
 
-Resources:
   WebappInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -449,7 +448,7 @@ Resources:
             systemctl enable amazon-ssm-agent
             systemctl start amazon-ssm-agent
 
-AutoScalingGroup:
+  AutoScalingGroup:
   Type: AWS::AutoScaling::AutoScalingGroup
   Properties:
     VPCZoneIdentifier:
@@ -470,7 +469,7 @@ AutoScalingGroup:
         Value: "Webapp-ASG"
         PropagateAtLaunch: true              
 
-ALBListener:
+  ALBListener:
   Type: AWS::ElasticLoadBalancingV2::Listener
   Properties:
     DefaultActions:
@@ -503,7 +502,7 @@ ALBListener:
       Protocol: HTTP
       VpcId: !Ref VPC
 
-Outputs:
+  Outputs:
   VPCID:
     Description: "VPC ID"
     Value: !Ref VPC
