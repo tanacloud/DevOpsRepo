@@ -502,7 +502,6 @@ Resources:
       VpcId: !Ref VPC
 
 
-
 Outputs:
   VPCID:
     Description: "VPC ID"
@@ -525,22 +524,26 @@ Outputs:
     Value: !Ref PrivateSubnet2
 
   WebappUrl:
-    Description: Webapp URL
+    Description: "Webapp URL"
     Value: 
       Fn::Join: 
-      - ''
-      - - http://
-        - !GetAtt ApplicationLoadBalancer.DNSName
-        - ':8080/SpringBootHelloWorldExampleApplication' 
+        - ''
+        - - 'http://'
+          - !GetAtt ApplicationLoadBalancer.DNSName
+          - ':8080/SpringBootHelloWorldExampleApplication'
+
   DeploymentGroup:
-    Description: Webapp Deployment Group
+    Description: "Webapp Deployment Group"
     Value: !Ref WebappDeploymentGroup
+
   DeploymentBucket:
-    Description: Deployment bucket
+    Description: "Deployment bucket"
     Value: !Ref WebappDeploymentBucket
+
   ApplicationName:
-    Description: CodeDeploy Application name
+    Description: "CodeDeploy Application name"
     Value: !Ref WebappApplication
+
   GithubIAMRoleArn:
-    Description: IAM role for GitHub
+    Description: "IAM role for GitHub"
     Value: !GetAtt GitHubIAMRole.Arn
