@@ -310,18 +310,19 @@ Resources:
     Type: AWS::CodeDeploy::Application
     Properties:
       ApplicationName: CodeDeployAppNameWithASG
+      
   WebappDeploymentGroup:
-    Type: AWS::CodeDeploy::DeploymentGroup
-    Properties:
-      ApplicationName: !Ref WebappApplication
-      ServiceRoleArn: !GetAtt CodeDeployRole.Arn
-      DeploymentConfigName: CodeDeployDefault.OneAtATime
-      DeploymentGroupName: CodeDeployGroupName
-      AutoRollbackConfiguration:
-          Enabled: true
-          Events:
-            - DEPLOYMENT_FAILURE
-            - DEPLOYMENT_STOP_ON_REQUEST
+  Type: AWS::CodeDeploy::DeploymentGroup
+  Properties:
+    ApplicationName: !Ref WebappApplication
+    ServiceRoleArn: !GetAtt CodeDeployRole.Arn
+    DeploymentConfigName: CodeDeployDefault.OneAtATime
+    DeploymentGroupName: CodeDeployGroupName
+    AutoRollbackConfiguration:
+      Enabled: true
+      Events:
+        - DEPLOYMENT_FAILURE
+        - DEPLOYMENT_STOP_ON_REQUEST
 
     AutoScalingGroups:
       - Ref: AutoScalingGroup
@@ -449,25 +450,23 @@ Resources:
             systemctl start amazon-ssm-agent
 
   AutoScalingGroup:
-    Type: AWS::AutoScaling::AutoScalingGroup
-    Properties:
-      VPCZoneIdentifier:
-        - !Ref PublicSubnet1
-        - !Ref PublicSubnet2
-      LaunchTemplate:
-        LaunchTemplateId: !Ref WebappLaunchTemplate
-        Version: !GetAtt WebappLaunchTemplate.LatestVersionNumber
-      MinSize: 1
-      MaxSize: 3
-      DesiredCapacity: 2
-      TargetGroupARNs:
-        - !Ref ALBTargetGroup
-      HealthCheckType: EC2
-      HealthCheckGracePeriod: 300
-      Tags:
-        - Key: Name
-          Value: "Webapp-ASG"
-          PropagateAtLaunch: true
+  Type: AWS::AutoScaling::AutoScalingGroup
+  Properties:
+    VPCZoneIdentifier:
+      - !Ref PublicSubnet1
+      - !Ref PublicSubnet2
+    LaunchTemplate:
+      LaunchTemplateId: !Ref WebappLaunchTemplate
+      Version: !GetAtt WebappLaunchTemplate.LatestVersion
+    DesiredCapacity: 1
+    MinSize: 1
+    MaxSize: 3
+    TargetGroupARNs:
+      - !Ref ALBTargetGroup
+    # Associar com CodeDeploy
+    CodeDeploy:
+      ApplicationName: !Ref WebappApplication
+      DeploymentGroupName: !Ref WebappDeploymentGroup
 
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
