@@ -524,8 +524,6 @@ Outputs:
     Description: "Private Subnet 2 ID"
     Value: !Ref PrivateSubnet2
 
-Outputs:
-
   WebappUrl:
     Description: Webapp URL
     Value: 
